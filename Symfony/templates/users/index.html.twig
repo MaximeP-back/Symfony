@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<title>Hello users controller !</title>
+
+{% block body %}
+<div class="example-wrapper">
+    <h1>Hello {{ controller_name }}! ✅</h1>
+
+    <p>
+       You use the {{ Repository_name }} repository to fetch all users from the database.
+    </p>
+
+    <h2> Créer un user : </h2>
+
+    <form action="{{ path('app_user_create') }}" method="post">
+        <label>
+            <p> username : </p>
+            <input type="text" name="username" placeholder="Username">
+        </label>
+        <p> mail :</p>
+        <input type="text" name="email" placeholder="Mail">
+        <p> password : </p>
+        <input type="text" name="password" placeholder="Password">
+
+        <button type="submit">Validation</button>
+    </form>
+
+    <h2> Voici les users en Bdd et leurs infos : </h2>
+
+    <ul>
+        {% for user in users %}
+            <li>
+                {{ user.id }} - {{ user.username }} - {{ user.email }} - {{ user.password }}
+                <button type="button" onclick="document.getElementById('edit-form{{ user.id }}').style.display='block'">edit</button>
+                <button><a href="{{ path('app_user_delete', {id: user.id}) }}">delete</a></button>
+            </li>
+
+            <form id="edit-form{{ user.id }}" action="{{ path('app_user_edit', {id: user.id}) }}" method="post" style="display:none">
+                <label>
+                    <p> username : </p>
+                    <input type="text" name="username" placeholder="Username" value='{{ user.username}}'>
+                </label>
+                <label>
+                <p> mail :</p>
+                <input type="text" name="email" placeholder="Mail" value="{{ user.email }}">
+                </label>
+                <label>
+                <p> password : </p>
+                <input type="text" name="password" placeholder="Password" value="{{ user.password }}">
+                </label>
+                <button type="submit">Validation</button>
+            </form>
+        {% endfor %}
+    </ul>
+
+
+</div>
+{% endblock %}

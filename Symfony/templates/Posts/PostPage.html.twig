@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Postes du blog</title>
+    </head>
+    <body>
+
+        <h2>Bienvenu sur la pages avec nos postes ! </h2>
+
+        <div class="post">
+            {% for post in posts %}
+                    <br><br>
+                    <p> Titre : {{ post.title }} </p>
+                    <p> Contenu : {{ post.text }} </p>
+                    {#<p> Photo : {{ post.photo }} </p>#}
+                    <p> Auteur du poste : {{ post.author }} </p>
+                    <p> Date du poste : {{ post.createdDate|date('d-m-Y H:i') }} </p>
+                    <br><br>
+            {%else%}
+                <p> Aucun post n'a été trouvé </p>
+            {% endfor %}
+        </div>
+
+    </body>
+
+<style>
+    post {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    inposts {
+        border: 1px solid red;
+        padding-bottom: 10%;
+    }
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+</style>

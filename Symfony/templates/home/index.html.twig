@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+<title>Home</title>
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center">
+    <h1>Bienvenu sur notre blog ! ✅</h1>
+    <p>Vous pouvez vous inscrire ou vous connecter pour accéder à notre blog.</p>
+    <button type="button"><a href="{{ path('app_Signin') }}">Inscription</a></button>
+    <br>
+    <button type="button"><a href="{{ path('app_Login') }}">Connexion</a></button>
+    </div>
+
+</div>
+{% endblock %}

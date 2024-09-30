@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<title>Inscription</title>
+
+{% block body %}
+    <style>
+        .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+        .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    </style>
+
+    <div class="example-wrapper">
+
+        <div style="display: flex; flex-direction: column; justify-content: center; align-items: center">
+            <h1>Formulaire d'inscription ! ✅</h1>
+
+            <form action="{{ path('app_user_create') }}" method="post">
+                <label>
+                    <p> username : </p>
+                    <input type="text" name="username" placeholder="Username">
+                </label>
+                <label>
+                    <p> mail :</p>
+                    <input type="text" name="email" placeholder="Mail">
+                </label>
+                <label>
+                    <p> password : </p>
+                    <input type="text" name="password" placeholder="Password">
+                </label>
+                <br>
+                <button type="submit">Validation</button>
+            </form>
+
+        </div>
+
+    </div>
+{% endblock %}
