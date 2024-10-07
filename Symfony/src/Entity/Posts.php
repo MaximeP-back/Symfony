@@ -15,20 +15,20 @@ class Posts
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(name: 'title', length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[ORM\Column(name: 'text', type: Types::TEXT, nullable: true)]
     private ?string $text = null;
 
-    #[ORM\Column(type: Types::JSON, nullable: true)]
+    #[ORM\Column(name: 'photo', type: Types::JSON, nullable: true)]
     private ?array $photo;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[ORM\Column(name: 'author', type: Types::TEXT, nullable: true)]
     private ?string $author = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $created_date = null;
+    #[ORM\Column(name: 'created_at', type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $createdDate = null;
 
     public function getId(): ?int
     {
@@ -81,12 +81,12 @@ class Posts
 
     public function getCreatedDate(): ?\DateTimeInterface
     {
-        return $this->created_date;
+        return $this->createdDate;
     }
 
     public function setCreatedDate(\DateTimeInterface $created_date): static
     {
-        $this->created_date = $created_date;
+        $this->createdDate = $created_date;
         return $this;
     }
 }

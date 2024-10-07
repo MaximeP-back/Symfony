@@ -41,6 +41,7 @@ class LoginController extends AbstractController
             $_SESSION['admin'] = false;
             $_SESSION['username'] = $username;
             $_SESSION['password'] = $password;
+            $_SESSION['email'] = $user -> getEmail();
             $_SESSION['created_at'] = $user -> getCreatedAt();
             $_SESSION['id'] = $user->getId ();
             return $this->redirectToRoute('app_main');

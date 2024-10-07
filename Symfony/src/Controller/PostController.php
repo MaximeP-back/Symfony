@@ -17,6 +17,7 @@ class PostController extends AbstractController
     public function showall(Request $request, PostsRepository $PostsRepository ): Response
     {
         $posts = $PostsRepository->findAll();
+//        var_dump ($posts);
         return $this->render('Posts/PostPage.html.twig', [
             'controller_name' => 'PostController',
             'posts' => $posts
@@ -36,7 +37,6 @@ class PostController extends AbstractController
         $images = [];
 
         if (!$title || !$content || !$author) {
-            var_dump($title, $content, $author);
             throw $this->createNotFoundException('Missing data for post creation');
         }
 
@@ -46,7 +46,7 @@ class PostController extends AbstractController
 
                 $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), flags:PATHINFO_FILENAME);
                 $safeFilename = $slugger->slug($originalFilename)->toString();
-                var_dump ($safeFilename);
+//                var_dump ($safeFilename);
 
                 try {
                     $uploadedFile->move(
@@ -69,10 +69,8 @@ class PostController extends AbstractController
     {
         if (session_status() === PHP_SESSION_NONE) {
             session_start ();
-            var_dump ($_SESSION);
         }
 
-        var_dump ($_SESSION);
         return $this->render('Posts/CreatePost.html.twig', [
             'controller_name' => 'PostController',
 

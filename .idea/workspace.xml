@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8b407253-bdbd-420b-a58b-adb377f755f0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+    <list default="true" id="8b407253-bdbd-420b-a58b-adb377f755f0" name="Changes" comment="Début de blog">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -189,7 +188,7 @@
     "Docker.project: Compose Deployment.executor": "Run",
     "PHP Script.db-connection.php.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Blog",
+    "git-widget-placeholder": "#1 on Blog",
     "last_opened_file_path": "C:/Users/maxime.pizzuto_tiime/Documents/GitHub/Symfony/Symfony/templates",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -211,11 +210,11 @@
       <recent name="C:\Users\maxime.pizzuto_tiime\Documents\GitHub\Symfony\Symfony\templates\users" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\maxime.pizzuto_tiime\Documents\GitHub\Symfony\Symfony\src\Controller\banis" />
-      <recent name="C:\Users\maxime.pizzuto_tiime\Documents\GitHub\Symfony\Symfony\src\Controller" />
+      <recent name="C:\Users\maxime.pizzuto_tiime\Documents\GitHub\Symfony\Symfony\templates\Profil" />
       <recent name="C:\Users\maxime.pizzuto_tiime\Documents\GitHub\Symfony\Symfony\templates\Posts" />
+      <recent name="C:\Users\maxime.pizzuto_tiime\Documents\GitHub\Symfony\Symfony\src\Controller" />
+      <recent name="C:\Users\maxime.pizzuto_tiime\Documents\GitHub\Symfony\Symfony\src\Controller\banis" />
       <recent name="C:\Users\maxime.pizzuto_tiime\Documents\GitHub\Symfony\Symfony" />
-      <recent name="C:\Users\maxime.pizzuto_tiime\Documents\GitHub\Symfony" />
     </key>
   </component>
   <component name="RunManager" selected="Docker.docker-compose.yml.symfony: Compose Deployment">
@@ -321,7 +320,8 @@
       <workItem from="1727248178929" duration="21807000" />
       <workItem from="1727335071970" duration="18141000" />
       <workItem from="1727421012840" duration="15622000" />
-      <workItem from="1727680266867" duration="1134000" />
+      <workItem from="1727680266867" duration="14881000" />
+      <workItem from="1728285100343" duration="1171000" />
     </task>
     <task id="LOCAL-00001" summary="Mise en place Symfony avec bdd sur docker">
       <option name="closed" value="true" />
@@ -367,7 +367,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="New-Pages" />
+                        <option value="origin/Blog" />
                       </list>
                     </value>
                   </entry>

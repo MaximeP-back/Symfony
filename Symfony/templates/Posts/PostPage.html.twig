@@ -13,7 +13,14 @@
                     <br><br>
                     <p> Titre : {{ post.title }} </p>
                     <p> Contenu : {{ post.text }} </p>
-                    {#<p> Photo : {{ post.photo }} </p>#}
+                    {% if post.photo is not empty %}
+                        <p>Photos :</p>
+                            {% for photo in post.photo %}
+                                <img src="{{ asset('uploads/images/' ~ photo) }}" alt="Image de {{ post.title }}" height="25%" width="25%" />
+                            {% endfor %}
+                    {% else %}
+                        <p> Pas de photo pour ce poste </p>
+                    {% endif %}
                     <p> Auteur du poste : {{ post.author }} </p>
                     <p> Date du poste : {{ post.createdDate|date('d-m-Y H:i') }} </p>
                     <br><br>
@@ -25,20 +32,11 @@
     </body>
 
 <style>
-    post {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-    inposts {
-        border: 1px solid red;
-        padding-bottom: 10%;
-    }
     body {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        background-color: #f0f0f0;
     }
 </style>

@@ -14,9 +14,7 @@ class BlogController extends AbstractController
     {
         if (session_status() === PHP_SESSION_NONE) {
             session_start ();
-            var_dump ($_SESSION);
         }
-        var_dump ($_SESSION);
         return $this->render('Blog/index.html.twig', [
             'controller_name' => 'BlogController',
             'user' => [

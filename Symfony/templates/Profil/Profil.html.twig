@@ -1,16 +1,37 @@
+<!-- Symfony/templates/Profil/profil.html.twig -->
+
 <!DOCTYPE html>
 
 <html>
-<head>
-    <title>Postes du blog</title>
-</head>
-<body>
+    <head>
 
-    <p> Bienvenue sur la page de ton profil ! </p>
+        <title>Profil</title>
 
-    <p> Username :  {{ app.user.username }} </p>
-    <p> mail :  {{ app.user.email }}</p>
-    <p> Password : {{ app.user.password }} </p>
-    <p> Date de création du compte :  {{ app.user.created_at }} </p>
+    </head>
+    <body>
 
-</body>
+        <p>Bienvenue sur la page de ton profil !</p>
+
+        <p>Username : {{ username }}</p>
+        <p>Email : {{ email }}</p>
+        <p>Password : {{ password|length }} caractères </p>
+        <p>Date de création du compte : {{ created_at|date('Y-m-d H:i:s') }}</p>
+        <p>ID : {{ id }}</p>
+
+        <button>Gérer tes posts</button><br>
+        <button>Modifier ton profil</button><br>
+        <button>Supprimer ton compte</button><br>
+
+    </body>
+</html>
+<style>
+    body {
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+</style>

@@ -35,12 +35,14 @@ class UsersRepository extends ServiceEntityRepository
         return $this->redirectToRoute('app_user');
     }
 
-    public function remove (EntityManagerInterface $em): Response
-    {
-        $users = $em->getRepository(Users::class)->find(1);
-        $em->remove($users);
+public function remove(EntityManagerInterface $em, int $id): Response
+{
+    $user = $em->getRepository(Users::class)->find($id);
+    if ($user) {
+        $em->remove($user);
         $em->flush();
-        return $this->redirectToRoute('app_user');
     }
+    return $this->redirectToRoute('app_user');
+}
 
 }

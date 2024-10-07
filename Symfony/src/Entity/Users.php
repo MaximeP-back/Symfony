@@ -16,20 +16,20 @@ class Users
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50, unique: true)]
+    #[ORM\Column(name: 'username', length: 50, unique: true)]
     private ?string $username = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(name: 'email', length: 255)]
     #[Assert\Email(
         message: 'The email "{{ value }}" is not a valid email.',
         mode: 'strict'
     )]
     private ?string $email = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(name: 'password', length: 255)]
     private ?string $password = null;
 
-    #[ORM\Column]
+    #[ORM\Column(name: 'created_at', type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeImmutable $created_at = null;
 
     public function __construct()
