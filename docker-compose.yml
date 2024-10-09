@@ -1,7 +1,7 @@
 services:
   app:
     build:
-      context: ./Symfony
+#      context: ./Symfony
       dockerfile: Dockerfile
     container_name: symfony_app
     restart: unless-stopped
