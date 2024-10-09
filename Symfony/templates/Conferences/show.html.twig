@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conference Details{% endblock %}
+
+{% block body %}
+    <div class="conference-details">
+        <h2>Conference Details</h2>
+        <p><strong>ID:</strong> {{ conference.id }}</p>
+        <p><strong>City:</strong> {{ conference.city }}</p>
+        <p><strong>Year:</strong> {{ conference.year }}</p>
+        <p><strong>Is International:</strong> <input type="checkbox" {% if conference.isInternational %}checked{% endif %} disabled></p>
+    </div>
+
+    <style>
+        .conference-details {
+            margin-top: 20px;
+        }
+        p {
+            margin: 5px 0;
+        }
+    </style>
+{% endblock %}

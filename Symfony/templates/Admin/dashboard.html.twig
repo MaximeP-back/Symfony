@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block body %}
+    <div class="dashboard-container">
+        <nav class="sidebar bg-dark" style="border-radius: 20px">
+            <ul>
+                {#                <li><a href="{{ path('homepage') }}">Back to the website</a></li>#}
+                <li><a href="{{ path('conferences') }}" style="color: #f8f9fa">Conferences</a></li>
+                <li><a href="{{ path('comments') }}" style="color: #f8f9fa">Comments</a></li>
+            </ul>
+        </nav>
+
+        <div class="content">
+            <h1>Welcome to the Admin Dashboard</h1>
+        </div>
+    </div>
+
+    <style>
+        .dashboard-container {
+            display: flex;
+        }
+        .sidebar {
+            width: 20%;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin: 10px 0;
+        }
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #333;
+        }
+        .content {
+            width: 80%;
+            padding: 20px;
+        }
+    </style>
+{% endblock %}

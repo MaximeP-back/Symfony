@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conferences{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1>Conferences</h1>
+{#            <a href="{{ path('admin_add_conference') }}" class="btn btn-primary">Add Conference</a>#}
+        </div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>City</th>
+                <th>Year</th>
+                <th>International</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for conference in conferences %}
+                <tr>
+                    <td>{{ conference.id }}</td>
+                    <td>{{ conference.city }}</td>
+                    <td>{{ conference.year }}</td>
+                    <td>
+                        <input type="checkbox" {% if conference.isInternational %}checked{% endif %} disabled>
+                    </td>
+                    <td>
+{#                        <a href="{{ path('admin_edit_conference', {id: conference.id}) }}" class="btn btn-sm btn-info">Edit</a>#}
+{#                        <a href="{{ path('admin_delete_conference', {id: conference.id}) }}" class="btn btn-sm btn-danger">Delete</a>#}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
