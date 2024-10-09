@@ -25,6 +25,7 @@ class CommentController extends AbstractController
         $comments = $this->commentRepository->findAll();
         return $this->render('Comments/index.html.twig', [
             'comments' => $comments,
+            'controller_name' => 'Page des commentaires',
         ]);
     }
 

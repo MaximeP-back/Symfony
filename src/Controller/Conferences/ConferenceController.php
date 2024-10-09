@@ -22,6 +22,7 @@ class ConferenceController extends AbstractController
         $conferences = $this->conferenceRepository->findAll();
         return $this->render('Conferences/index.html.twig', [
             'conferences' => $conferences,
+            'controller_name' => 'Page des Conferences',
         ]);
     }
 

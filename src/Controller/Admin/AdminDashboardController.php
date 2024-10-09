@@ -28,7 +28,7 @@ class AdminDashboardController extends AbstractController
         return $this->render('Admin/dashboard.html.twig', [
             'conferences' => $conferences,
             'comments' => $comments,
-            'controller_name' => 'AdminDashboardController',
+            'controller_name' => 'Page Administrateur',
         ]);
     }
 }
