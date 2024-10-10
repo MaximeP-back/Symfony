@@ -57,7 +57,7 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "Symfony/src/"
+            "App\\": "src/"
         }
     },
     "autoload-dev": {
