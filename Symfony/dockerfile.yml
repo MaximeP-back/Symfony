@@ -1,0 +1,29 @@
+FROM php:8.2-cli
+  
+  # Installation des dépendances système
+RUN apt-get update && apt-get install -y \
+git \
+unzip \
+libpq-dev \
+&& docker-php-ext-install pdo_pgsql
+  
+  # Installation de Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+  
+  # Définir le répertoire de travail
+WORKDIR /app
+  
+  # Copier le reste du code
+COPY . .
+  
+  # Installer les dépendances PHP
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-scripts --no-autoloader --prefer-dist
+  
+  # Générer l'autoloader
+RUN composer dump-autoload --optimize
+  
+  # Exposer le port de l'application
+EXPOSE 8000
+  
+  # Commande de démarrage
+CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]

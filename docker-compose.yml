@@ -1,8 +1,8 @@
 services:
   app:
     build:
-#      context: ./Symfony
-      dockerfile: Dockerfile
+      context: ./Symfony
+      dockerfile: ./dockerfile.yml
     container_name: symfony_app
     restart: unless-stopped
     ports:
