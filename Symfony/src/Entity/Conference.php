@@ -14,12 +14,28 @@ class Conference
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Regex(
+        pattern: "/^[a-zA-Z\s]+$/",
+        message: "Attentions au caractères utilisés."
+    )]
     private $city;
 
     #[ORM\Column(type: 'integer')]
+    #[Assert\NotBlank]
+    #[Assert\Range(
+        min: 2000,
+        max: 2099,
+        notInRangeMessage: "The year must be between {{ min }} and {{ max }}."
+    )]
+    #[Assert\Length(
+        min: 4,
+        max: 4,
+        exactMessage: "The year must be exactly {{ limit }} digits."
+    )]
     private $year;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $isInternational;
 
     // Getters and setters
@@ -55,7 +71,7 @@ class Conference
         return $this->isInternational;
     }
 
-    public function setIsInternational(bool $isInternational): self
+    public function setIsInternational(?bool $isInternational): self
     {
         $this->isInternational = $isInternational;
         return $this;

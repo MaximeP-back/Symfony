@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Conference{% endblock %}
+
+{% block body %}
+    {% include 'sidebar.html.twig' %}
+    <br>
+    <div class="container mt-4">
+        <h1>Edit Conference</h1>
+        <form action="{{ path('update_conference', {id: conference.id}) }}" method="POST">
+            <div class="mb-3">
+                <label for="city" class="form-label">City</label>
+                <input type="text" class="form-control" id="city" name="city" value="{{ conference.city }}" required>
+                {% if errors.city is defined %}
+                    <div class="text-danger">
+                        {{ errors.city }}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label for="year" class="form-label">Year</label>
+                <input type="number" class="form-control" id="year" name="year" value="{{ conference.year }}" required>
+                {% if errors.year is defined %}
+                    <div class="text-danger">
+                        {{ errors.year }}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label for="isInternational" class="form-label">International</label>
+                <input type="checkbox" class="form-check-input" id="isInternational" name="isInternational" {% if conference.isInternational %}checked{% endif %}>
+                {% if errors.isInternational is defined %}
+                    <div class="text-danger">
+                        {{ errors.isInternational }}
+                    </div>
+                {% endif %}
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+{% endblock %}
