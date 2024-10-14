@@ -23,12 +23,19 @@ class DashboardController extends AbstractController
     public function index(): Response
     {
         $conferences = $this->conferenceRepository->findAll();
-        $comments = $this->commentRepository->findAll();
+        $conferenceComments = [];
+
+        foreach ($conferences as $conference) {
+            $conferenceComments[$conference->getId()] = $this->commentRepository->findBy(
+                ['conference' => $conference->getId()],
+                null,
+                2
+            );
+        }
 
         return $this->render('dashboard/index.html.twig', [
             'conferences' => $conferences,
-            'comments' => $comments,
-            'controller_name' => 'DashboardController',
+            'conferenceComments' => $conferenceComments,
         ]);
     }
 }

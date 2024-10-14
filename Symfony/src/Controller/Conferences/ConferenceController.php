@@ -4,6 +4,7 @@ namespace App\Controller\Conferences;
 
 use App\Entity\Conference;
 use App\Repository\ConferenceRepository;
+use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,20 +16,38 @@ class ConferenceController extends AbstractController
 {
     private $entityManager;
     private $conferenceRepository;
+    private $CommentRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, ConferenceRepository $conferenceRepository)
+    public function __construct(EntityManagerInterface $entityManager, ConferenceRepository $conferenceRepository, CommentRepository $commentRepository)
     {
         $this->entityManager = $entityManager;
         $this->conferenceRepository = $conferenceRepository;
+        $this->CommentRepository = $commentRepository;
     }
 
     #[Route('/conferences/new', name: 'new_conference')]
     public function new(): Response
-{
-    return $this->render('Conferences/new.html.twig', [
-        'controller_name' => 'Page de création de Conference'
-    ]);
-}
+    {
+        return $this->render('Conferences/new.html.twig', [
+            'controller_name' => 'Page de création de Conference'
+        ]);
+    }
+
+    #[Route('/conference/{id}', name: 'conference_show')]
+    public function show(int $id): Response
+    {
+        $conference = $this->conferenceRepository->find($id);
+        $comments = $this->CommentRepository->findBy(['conference' => $id]);
+
+        if (!$conference) {
+            throw $this->createNotFoundException('The conference does not exist');
+        }
+
+        return $this->render('dashboard/OneConference.html.twig', [
+            'conference' => $conference,
+            'comments' => $comments,
+        ]);
+    }
 
     #[Route('/conferences', name: 'conferences')]
     public function index(): Response

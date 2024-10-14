@@ -8,7 +8,7 @@
     <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1>Conference Comments</h1>
-            <a href="{{ path('home') }}" class="btn btn-primary">Add Conference Comment</a>
+            <a href="{{ path('new_comment') }}" class="btn btn-primary">Add Conference Comment</a>
         </div>
         <table class="table table-striped">
             <thead>
@@ -30,8 +30,8 @@
                     <td>{{ comment.photoFilename }}</td>
                     <td>{{ comment.createdAt|date('Y-m-d H:i') }}</td>
                     <td>
-                        <a href="{{ path('home', {id: comment.id}) }}" class="btn btn-sm btn-info">Edit</a>
-                        <a href="{{ path('home', {id: comment.id}) }}" class="btn btn-sm btn-danger">Delete</a>
+                        <a href="{{ path('edit_comment', {id: comment.id}) }}" class="btn btn-sm btn-info">Edit</a>
+                        <a href="{{ path('delete_comment', {id: comment.id}) }}" class="btn btn-sm btn-danger">Delete</a>
                     </td>
                 </tr>
             {% endfor %}

@@ -1,0 +1,38 @@
+<div class="pannel-container">
+    <nav class="sidebar bg-dark" style="border-radius: 20px">
+        <ul>
+            {#                <li><a href="{{ path('homepage') }}">Back to the website</a></li>#}
+            <li><a href="{{ path('home') }}" style="color: #f8f9fa">Connexion</a></li>
+            <li><a href="{{ path('home') }}" style="color: #f8f9fa">Déconnexion</a></li>
+        </ul>
+
+        <p> Etat : </p> <p> Non connecté </p>
+
+    </nav>
+</div>
+<style>
+    .pannel-container {
+        display: flex;
+    }
+    .sidebar {
+        width: 20%;
+        background-color: #f8f9fa;
+        padding: 20px;
+        margin-top: 40px;
+    }
+    .sidebar ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    .sidebar ul li {
+        margin: 10px 0;
+    }
+    .sidebar ul li a {
+        text-decoration: none;
+        color: #333;
+    }
+
+    p{
+        color: white;
+    }
+</style>
