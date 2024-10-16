@@ -2,8 +2,8 @@
 
 namespace App\Controller\Dashboard;
 
-use App\Repository\ConferenceRepository;
 use App\Repository\CommentRepository;
+use App\Repository\ConferenceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -11,6 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class DashboardController extends AbstractController
 {
     private ConferenceRepository $conferenceRepository;
+
     private CommentRepository $commentRepository;
 
     public function __construct(ConferenceRepository $conferenceRepository, CommentRepository $commentRepository)
@@ -34,7 +35,7 @@ class DashboardController extends AbstractController
         }
 
         return $this->render('dashboard/index.html.twig', [
-            'conferences' => $conferences,
+            'conferences'        => $conferences,
             'conferenceComments' => $conferenceComments,
         ]);
     }

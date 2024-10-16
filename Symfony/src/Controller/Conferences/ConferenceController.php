@@ -3,8 +3,8 @@
 namespace App\Controller\Conferences;
 
 use App\Entity\Conference;
-use App\Repository\ConferenceRepository;
 use App\Repository\CommentRepository;
+use App\Repository\ConferenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,7 +15,9 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class ConferenceController extends AbstractController
 {
     private $entityManager;
+
     private $conferenceRepository;
+
     private $CommentRepository;
 
     public function __construct(EntityManagerInterface $entityManager, ConferenceRepository $conferenceRepository, CommentRepository $commentRepository)
@@ -29,7 +31,7 @@ class ConferenceController extends AbstractController
     public function new(): Response
     {
         return $this->render('Conferences/new.html.twig', [
-            'controller_name' => 'Page de création de Conference'
+            'controller_name' => 'Page de création de Conference',
         ]);
     }
 
@@ -45,7 +47,7 @@ class ConferenceController extends AbstractController
 
         return $this->render('dashboard/OneConference.html.twig', [
             'conference' => $conference,
-            'comments' => $comments,
+            'comments'   => $comments,
         ]);
     }
 
@@ -53,8 +55,9 @@ class ConferenceController extends AbstractController
     public function index(): Response
     {
         $conferences = $this->conferenceRepository->findAll();
+
         return $this->render('Conferences/index.html.twig', [
-            'conferences' => $conferences,
+            'conferences'     => $conferences,
             'controller_name' => 'Page des Conferences',
         ]);
     }
@@ -67,7 +70,7 @@ class ConferenceController extends AbstractController
         $conference->setYear($request->request->get('year'));
 
         $isInternational = $request->request->get('isInternational');
-        $conference->setIsInternational($isInternational !== null ? (bool)$isInternational : null);
+        $conference->setIsInternational($isInternational !== null ? (bool) $isInternational : null);
 
         $errors = $validator->validate($conference);
 
@@ -87,7 +90,6 @@ class ConferenceController extends AbstractController
         return $this->redirectToRoute('conferences');
     }
 
-
     #[Route('/conferences/edit/{id}', name: 'edit_conference')]
     public function edit(int $id): Response
     {
@@ -97,7 +99,7 @@ class ConferenceController extends AbstractController
         }
 
         return $this->render('Conferences/edit.html.twig', [
-            'conference' => $conference,
+            'conference'      => $conference,
             'controller_name' => 'Page de modification de Conference',
         ]);
     }
@@ -112,7 +114,7 @@ class ConferenceController extends AbstractController
             $conference->setYear($request->request->get('year'));
 
             $isInternational = $request->request->get('isInternational');
-            $conference->setIsInternational($isInternational !== null ? (bool)$isInternational : null);
+            $conference->setIsInternational($isInternational !== null ? (bool) $isInternational : null);
 
             $this->conferenceRepository->update($conference);
         }

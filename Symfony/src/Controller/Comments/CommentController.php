@@ -15,6 +15,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class CommentController extends AbstractController
 {
     private $entityManager;
+
     private $commentRepository;
 
     public function __construct(EntityManagerInterface $entityManager, CommentRepository $commentRepository)
@@ -27,7 +28,7 @@ class CommentController extends AbstractController
     public function new(): Response
     {
         return $this->render('Comments/new.html.twig', [
-            'controller_name' => 'Page de création de Commentaire'
+            'controller_name' => 'Page de création de Commentaire',
         ]);
     }
 
@@ -40,7 +41,7 @@ class CommentController extends AbstractController
         }
 
         return $this->render('Comments/edit.html.twig', [
-            'comment' => $comment,
+            'comment'         => $comment,
             'controller_name' => 'Page de modification de Commentaires',
         ]);
     }
@@ -49,8 +50,9 @@ class CommentController extends AbstractController
     public function index(): Response
     {
         $comments = $this->commentRepository->findAll();
+
         return $this->render('Comments/index.html.twig', [
-            'comments' => $comments,
+            'comments'        => $comments,
             'controller_name' => 'Page des commentaires',
         ]);
     }
@@ -107,7 +109,7 @@ class CommentController extends AbstractController
                 // Handle the case where the conference is not found
                 return $this->render('Comments/edit.html.twig', [
                     'comment' => $comment,
-                    'errors' => ['conference' => 'Conference not found'],
+                    'errors'  => ['conference' => 'Conference not found'],
                 ]);
             }
 
@@ -121,7 +123,7 @@ class CommentController extends AbstractController
 
                 return $this->render('Comments/edit.html.twig', [
                     'comment' => $comment,
-                    'errors' => $errorMessages,
+                    'errors'  => $errorMessages,
                 ]);
             }
 
