@@ -95,9 +95,9 @@ class Comment
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(): self
     {
-        $this->createdAt = $createdAt;
+        $this->createdAt = new \DateTime();
 
         return $this;
     }
@@ -109,7 +109,7 @@ class Comment
 
     public function setText(string $text): self
     {
-        $this->email = $text;
+        $this->text = $text;
 
         return $this;
     }
