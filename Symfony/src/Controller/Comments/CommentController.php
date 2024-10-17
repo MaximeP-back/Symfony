@@ -76,7 +76,7 @@ class CommentController extends AbstractController
             $comment->setConference($conference);
         } else {
             return $this->render('Comments/new.html.twig', [
-                'errors' => ['conference' => 'Conference not found'],
+                'errors'          => ['conference' => 'Conference not found'],
                 'controller_name' => 'Page de création de Commentaire',
             ]);
         }
@@ -90,16 +90,16 @@ class CommentController extends AbstractController
             }
 
             return $this->render('Comments/new.html.twig', [
-                'errors' => $errorMessages,
-                'controller_name' => 'Page de création de Commentaire'
+                'errors'          => $errorMessages,
+                'controller_name' => 'Page de création de Commentaire',
             ]);
         }
 
         $context = [
-            'user_ip' => $request->getClientIp(),
+            'user_ip'    => $request->getClientIp(),
             'user_agent' => $request->headers->get('user-agent'),
-            'referrer' => $request->headers->get('referer'),
-            'permalink' => $request->getUri(),
+            'referrer'   => $request->headers->get('referer'),
+            'permalink'  => $request->getUri(),
         ];
         if (2 === $spamChecker->getSpamScore($comment, $context)) {
             throw new \RuntimeException('Blatant spam, go away!');
