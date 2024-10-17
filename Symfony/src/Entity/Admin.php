@@ -50,7 +50,6 @@ class Admin implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     *
      * @see UserInterface
      */
     public function getUserIdentifier(): string
@@ -102,6 +101,6 @@ class Admin implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function eraseCredentials(): void
     {
-         $this->plainPassword = null;
+        $this->plainPassword = null;
     }
 }

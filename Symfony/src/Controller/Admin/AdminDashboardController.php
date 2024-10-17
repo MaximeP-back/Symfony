@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin;
 
-use App\Repository\ConferenceRepository;
 use App\Repository\CommentRepository;
+use App\Repository\ConferenceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -11,6 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class AdminDashboardController extends AbstractController
 {
     private ConferenceRepository $conferenceRepository;
+
     private CommentRepository $commentRepository;
 
     public function __construct(ConferenceRepository $conferenceRepository, CommentRepository $commentRepository)
@@ -26,8 +27,8 @@ class AdminDashboardController extends AbstractController
         $comments = $this->commentRepository->findAll();
 
         return $this->render('Admin/dashboard.html.twig', [
-            'conferences' => $conferences,
-            'comments' => $comments,
+            'conferences'     => $conferences,
+            'comments'        => $comments,
             'controller_name' => 'Page Administrateur',
         ]);
     }

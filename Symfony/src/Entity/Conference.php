@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ConferenceRepository;
+use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ConferenceRepository::class)]
 class Conference
@@ -17,7 +17,7 @@ class Conference
     #[Assert\NotBlank]
     #[Assert\Regex(
         pattern: "/^[a-zA-Z\s]+$/",
-        message: "Attentions au caractères utilisés."
+        message: 'Attentions au caractères utilisés.'
     )]
     private $city;
 
@@ -26,12 +26,12 @@ class Conference
     #[Assert\Range(
         min: 2000,
         max: 2099,
-        notInRangeMessage: "The year must be between {{ min }} and {{ max }}."
+        notInRangeMessage: 'The year must be between {{ min }} and {{ max }}.'
     )]
     #[Assert\Length(
         min: 4,
         max: 4,
-        exactMessage: "The year must be exactly {{ limit }} digits."
+        exactMessage: 'The year must be exactly {{ limit }} digits.'
     )]
     private $year;
 
@@ -52,6 +52,7 @@ class Conference
     public function setCity(string $city): self
     {
         $this->city = $city;
+
         return $this;
     }
 
@@ -63,6 +64,7 @@ class Conference
     public function setYear(int $year): self
     {
         $this->year = $year;
+
         return $this;
     }
 
@@ -74,6 +76,7 @@ class Conference
     public function setIsInternational(?bool $isInternational): self
     {
         $this->isInternational = $isInternational;
+
         return $this;
     }
 }
