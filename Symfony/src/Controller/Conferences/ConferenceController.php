@@ -2,7 +2,9 @@
 
 namespace App\Controller\Conferences;
 
+use App\Entity\Comment;
 use App\Entity\Conference;
+use App\Form\CommentType;
 use App\Repository\CommentRepository;
 use App\Repository\ConferenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,16 +17,16 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class ConferenceController extends AbstractController
 {
     private $entityManager;
-
     private $conferenceRepository;
+    private $commentRepository;
+    private $photoDir;
 
-    private $CommentRepository;
-
-    public function __construct(EntityManagerInterface $entityManager, ConferenceRepository $conferenceRepository, CommentRepository $commentRepository)
+    public function __construct(EntityManagerInterface $entityManager, ConferenceRepository $conferenceRepository, CommentRepository $commentRepository, string $photoDir)
     {
         $this->entityManager = $entityManager;
         $this->conferenceRepository = $conferenceRepository;
-        $this->CommentRepository = $commentRepository;
+        $this->commentRepository = $commentRepository;
+        $this->photoDir = $photoDir;
     }
 
     #[Route('/conferences/new', name: 'new_conference')]
@@ -36,10 +38,31 @@ class ConferenceController extends AbstractController
     }
 
     #[Route('/conference/{id}', name: 'conference_show')]
-    public function show(int $id): Response
+    public function show(int $id, Request $request, Conference $conference, CommentRepository $commentRepository): Response
     {
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment->setConference($this->conferenceRepository->find($id));
+            $comment->setCreatedAt(new \DateTime());
+            $comment->setEmail($form['email']->getData());
+            $comment->setAuthor($form['author']->getData());
+            $comment->setText($form['text']->getData());
+            if ($photo = $form['photo']->getData()) {
+                $filename = bin2hex(random_bytes(6)).'.'.$photo->guessExtension();
+                $photo->move($this->photoDir, $filename);
+                $comment->setPhotoFilename($filename);
+            }
+            $this->entityManager->persist($comment);
+            $this->entityManager->flush();
+
+            return $this->redirectToRoute('conference_show', ['id' => $id]);
+        }
+
         $conference = $this->conferenceRepository->find($id);
-        $comments = $this->CommentRepository->findBy(['conference' => $id]);
+        $comments = $this->commentRepository->findBy(['conference' => $id]);
 
         if (!$conference) {
             throw $this->createNotFoundException('The conference does not exist');
@@ -48,6 +71,7 @@ class ConferenceController extends AbstractController
         return $this->render('dashboard/OneConference.html.twig', [
             'conference' => $conference,
             'comments'   => $comments,
+            'comment_form' => $form,
         ]);
     }
 
