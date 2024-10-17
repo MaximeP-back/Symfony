@@ -27,6 +27,15 @@
                 {% endif %}
             </div>
             <div class="mb-3">
+                <label for="text" class="form-label">Text</label>
+                <textarea class="form-control" id="text" name="text" required>{{ comment.text }}</textarea>
+                {% if errors.text is defined %}
+                    <div class="text-danger">
+                        {{ errors.text }}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="mb-3">
                 <label for="photoFilename" class="form-label">Photo Filename</label>
                 <input type="text" class="form-control" id="photoFilename" name="photoFilename" value="{{ comment.photoFilename }}">
                 {% if errors.photoFilename is defined %}

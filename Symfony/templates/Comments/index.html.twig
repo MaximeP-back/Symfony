@@ -16,6 +16,7 @@
                 <th>Conference</th>
                 <th>Author</th>
                 <th>Email</th>
+                <th>Text</th>
                 <th>Photo Filename</th>
                 <th>Created At</th>
                 <th>Actions</th>
@@ -27,6 +28,7 @@
                     <td>{{ comment.conference.city }} {{ comment.conference.year }}</td>
                     <td>{{ comment.author }}</td>
                     <td>{{ comment.email }}</td>
+                    <td>{{ comment.text }}</td>
                     <td>{{ comment.photoFilename }}</td>
                     <td>{{ comment.createdAt|date('Y-m-d H:i') }}</td>
                     <td>

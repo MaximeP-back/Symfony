@@ -3,8 +3,10 @@
 namespace App\Controller\Comments;
 
 use App\Entity\Comment;
+use App\Form\CommentType;
 use App\Repository\CommentRepository;
 use App\Repository\ConferenceRepository;
+use App\SpamChecker;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +17,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class CommentController extends AbstractController
 {
     private $entityManager;
+
     private $commentRepository;
 
     public function __construct(EntityManagerInterface $entityManager, CommentRepository $commentRepository)
@@ -27,7 +30,7 @@ class CommentController extends AbstractController
     public function new(): Response
     {
         return $this->render('Comments/new.html.twig', [
-            'controller_name' => 'Page de création de Commentaire'
+            'controller_name' => 'Page de création de Commentaire',
         ]);
     }
 
@@ -40,7 +43,7 @@ class CommentController extends AbstractController
         }
 
         return $this->render('Comments/edit.html.twig', [
-            'comment' => $comment,
+            'comment'         => $comment,
             'controller_name' => 'Page de modification de Commentaires',
         ]);
     }
@@ -49,18 +52,22 @@ class CommentController extends AbstractController
     public function index(): Response
     {
         $comments = $this->commentRepository->findAll();
+
         return $this->render('Comments/index.html.twig', [
-            'comments' => $comments,
+            'comments'        => $comments,
             'controller_name' => 'Page des commentaires',
         ]);
     }
 
     #[Route('/comments/create', name: 'create_comment', methods: ['POST'])]
-    public function create(Request $request, ValidatorInterface $validator, ConferenceRepository $conferenceRepository): Response
+    public function create(Request $request, ValidatorInterface $validator, ConferenceRepository $conferenceRepository, SpamChecker $spamChecker): Response
     {
         $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+
         $comment->setAuthor($request->request->get('author'));
         $comment->setEmail($request->request->get('email'));
+        $comment->setText($request->request->get('text'));
         $comment->setPhotoFilename($request->request->get('photoFilename'));
         $comment->setCreatedAt(new \DateTime());
 
@@ -70,6 +77,7 @@ class CommentController extends AbstractController
         } else {
             return $this->render('Comments/new.html.twig', [
                 'errors' => ['conference' => 'Conference not found'],
+                'controller_name' => 'Page de création de Commentaire',
             ]);
         }
 
@@ -83,7 +91,18 @@ class CommentController extends AbstractController
 
             return $this->render('Comments/new.html.twig', [
                 'errors' => $errorMessages,
+                'controller_name' => 'Page de création de Commentaire'
             ]);
+        }
+
+        $context = [
+            'user_ip' => $request->getClientIp(),
+            'user_agent' => $request->headers->get('user-agent'),
+            'referrer' => $request->headers->get('referer'),
+            'permalink' => $request->getUri(),
+        ];
+        if (2 === $spamChecker->getSpamScore($comment, $context)) {
+            throw new \RuntimeException('Blatant spam, go away!');
         }
 
         $this->commentRepository->save($comment);
@@ -98,6 +117,7 @@ class CommentController extends AbstractController
         if ($comment) {
             $comment->setAuthor($request->request->get('author'));
             $comment->setEmail($request->request->get('email'));
+            $comment->setText($request->request->get('text'));
             $comment->setPhotoFilename($request->request->get('photoFilename'));
 
             $conference = $conferenceRepository->find($request->request->get('conference_id'));
@@ -107,7 +127,7 @@ class CommentController extends AbstractController
                 // Handle the case where the conference is not found
                 return $this->render('Comments/edit.html.twig', [
                     'comment' => $comment,
-                    'errors' => ['conference' => 'Conference not found'],
+                    'errors'  => ['conference' => 'Comment not found'],
                 ]);
             }
 
@@ -121,7 +141,7 @@ class CommentController extends AbstractController
 
                 return $this->render('Comments/edit.html.twig', [
                     'comment' => $comment,
-                    'errors' => $errorMessages,
+                    'errors'  => $errorMessages,
                 ]);
             }
 
