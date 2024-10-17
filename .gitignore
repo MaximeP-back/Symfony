@@ -10,6 +10,7 @@
 /Symfony/public/bundles/
 /Symfony/var/
 /Symfony/vendor/
+/.php-cs-fixer.cache
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###
