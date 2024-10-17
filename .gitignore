@@ -1,5 +1,8 @@
 /.idea
 ###> symfony/framework-bundle ###
+/public/uploads/
+/.env
+/.env.test
 /.env.local
 /.env.local.php
 /.env.*.local
@@ -15,8 +18,6 @@
 ###< phpunit/phpunit ###
 
 ###> symfony/phpunit-bridge ###
-.phpunit.result.cache
-/phpunit.xml
 ###< symfony/phpunit-bridge ###
 
 ###> symfony/asset-mapper ###
