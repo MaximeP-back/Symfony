@@ -24,6 +24,14 @@
         </ul>
         <h2>Add ton com bg </h2>
         {{ form(comment_form) }}
+        <br><br><br>
+        {% for label, messages in app.flashes %}
+            <div class="flash-{{ label }}">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endfor %}
     </div>
 
     <style>
