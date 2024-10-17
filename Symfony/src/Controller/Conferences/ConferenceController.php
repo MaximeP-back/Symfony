@@ -7,7 +7,9 @@ use App\Entity\Conference;
 use App\Form\CommentType;
 use App\Repository\CommentRepository;
 use App\Repository\ConferenceRepository;
+use App\SpamChecker;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,16 +19,22 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class ConferenceController extends AbstractController
 {
     private $entityManager;
+
     private $conferenceRepository;
+
     private $commentRepository;
+
     private $photoDir;
 
-    public function __construct(EntityManagerInterface $entityManager, ConferenceRepository $conferenceRepository, CommentRepository $commentRepository, string $photoDir)
+    private $logger;
+
+    public function __construct(EntityManagerInterface $entityManager, ConferenceRepository $conferenceRepository, CommentRepository $commentRepository, string $photoDir, LoggerInterface $logger)
     {
         $this->entityManager = $entityManager;
         $this->conferenceRepository = $conferenceRepository;
         $this->commentRepository = $commentRepository;
         $this->photoDir = $photoDir;
+        $this->logger = $logger;
     }
 
     #[Route('/conferences/new', name: 'new_conference')]
@@ -38,23 +46,55 @@ class ConferenceController extends AbstractController
     }
 
     #[Route('/conference/{id}', name: 'conference_show')]
-    public function show(int $id, Request $request, Conference $conference, CommentRepository $commentRepository): Response
+    public function show(int $id, Request $request, Conference $conference, CommentRepository $commentRepository, SpamChecker $spamChecker): Response
     {
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
 
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $comment->setConference($this->conferenceRepository->find($id));
             $comment->setCreatedAt(new \DateTime());
             $comment->setEmail($form['email']->getData());
             $comment->setAuthor($form['author']->getData());
             $comment->setText($form['text']->getData());
+
             if ($photo = $form['photo']->getData()) {
-                $filename = bin2hex(random_bytes(6)).'.'.$photo->guessExtension();
+                $filename = bin2hex(random_bytes(6)) . '.' . $photo->guessExtension();
                 $photo->move($this->photoDir, $filename);
                 $comment->setPhotoFilename($filename);
             }
+
+            $context = [
+                'user_ip'    => $request->getClientIp(),
+                'user_agent' => $request->headers->get('user-agent'),
+                'referrer'   => $request->headers->get('referer'),
+                'permalink'  => $request->getUri(),
+            ];
+
+            $this->logger->info('Spam check context', $context);
+
+            $spamScore = $spamChecker->getSpamScore($comment, $context);
+
+            if (0 === $spamScore) {
+                $this->addFlash('success', 'Comment was submitted for moderation');
+                $this->entityManager->persist($comment);
+                $this->entityManager->flush();
+
+                return $this->redirectToRoute('conference_show', ['id' => $id]);
+            }
+            if (1 === $spamScore) {
+                $this->addFlash('success', 'Comment was marked as spam');
+
+                return $this->redirectToRoute('conference_show', ['id' => $id]);
+            }
+            if (2 === $spamScore) {
+                $this->addFlash('error', 'Blatant spam, go away!');
+
+                return $this->redirectToRoute('conference_show', ['id' => $id]);
+            }
+
             $this->entityManager->persist($comment);
             $this->entityManager->flush();
 
@@ -69,8 +109,8 @@ class ConferenceController extends AbstractController
         }
 
         return $this->render('dashboard/OneConference.html.twig', [
-            'conference' => $conference,
-            'comments'   => $comments,
+            'conference'   => $conference,
+            'comments'     => $comments,
             'comment_form' => $form,
         ]);
     }
