@@ -2,7 +2,6 @@
 ###> symfony/framework-bundle ###
 /public/uploads/
 /.env
-/.env.test
 /.env.local
 /.env.local.php
 /.env.*.local
@@ -10,6 +9,7 @@
 /Symfony/public/bundles/
 /var/
 /vendor/
+/.php-cs-fixer.cache
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###
@@ -26,3 +26,7 @@
 /Symfony/public/assets/
 /Symfony/assets/vendor/
 ###< symfony/asset-mapper ###
+###> friendsofphp/php-cs-fixer ###
+/.php-cs-fixer.php
+/.php-cs-fixer.cache
+###< friendsofphp/php-cs-fixer ###
