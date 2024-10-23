@@ -2,7 +2,6 @@
 ###> symfony/framework-bundle ###
 /Symfony/public/uploads/
 /Symfony/.env
-/Symfony/.env.test
 /Symfony/.env.local
 /Symfony/.env.local.php
 /Symfony/.env.*.local

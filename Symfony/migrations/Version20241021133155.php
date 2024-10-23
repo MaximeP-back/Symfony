@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20241009075117 extends AbstractMigration
+final class Version20241021133155 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,6 +20,14 @@ final class Version20241009075117 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
+        $this->addSql('CREATE SEQUENCE admin_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE SEQUENCE comment_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE SEQUENCE conference_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE TABLE admin (id INT NOT NULL, username VARCHAR(180) NOT NULL, roles JSON NOT NULL, password VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_IDENTIFIER_USERNAME ON admin (username)');
+        $this->addSql('CREATE TABLE comment (id INT NOT NULL, conference_id INT NOT NULL, author VARCHAR(255) NOT NULL, text VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, photo_filename VARCHAR(255) DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE INDEX IDX_9474526C604B8382 ON comment (conference_id)');
+        $this->addSql('CREATE TABLE conference (id INT NOT NULL, city VARCHAR(255) NOT NULL, year INT NOT NULL, is_international BOOLEAN DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE messenger_messages (id BIGSERIAL NOT NULL, body TEXT NOT NULL, headers TEXT NOT NULL, queue_name VARCHAR(190) NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, available_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, delivered_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_75EA56E0FB7336F0 ON messenger_messages (queue_name)');
         $this->addSql('CREATE INDEX IDX_75EA56E0E3BD61CE ON messenger_messages (available_at)');
@@ -35,28 +43,20 @@ final class Version20241009075117 extends AbstractMigration
         $$ LANGUAGE plpgsql;');
         $this->addSql('DROP TRIGGER IF EXISTS notify_trigger ON messenger_messages;');
         $this->addSql('CREATE TRIGGER notify_trigger AFTER INSERT OR UPDATE ON messenger_messages FOR EACH ROW EXECUTE PROCEDURE notify_messenger_messages();');
-        $this->addSql('ALTER TABLE comment DROP CONSTRAINT comment_conference_id_fkey');
-        $this->addSql('ALTER TABLE comment ADD photo_filename VARCHAR(255) DEFAULT NULL');
-        $this->addSql('ALTER TABLE comment ALTER id DROP DEFAULT');
-        $this->addSql('ALTER TABLE comment ALTER created_at DROP DEFAULT');
         $this->addSql('ALTER TABLE comment ADD CONSTRAINT FK_9474526C604B8382 FOREIGN KEY (conference_id) REFERENCES conference (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
-        $this->addSql('ALTER TABLE conference ALTER id DROP DEFAULT');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE SCHEMA public');
-        $this->addSql('DROP TABLE messenger_messages');
-        $this->addSql('CREATE SEQUENCE conference_id_seq');
-        $this->addSql('SELECT setval(\'conference_id_seq\', (SELECT MAX(id) FROM conference))');
-        $this->addSql('ALTER TABLE conference ALTER id SET DEFAULT nextval(\'conference_id_seq\')');
+        $this->addSql('DROP SEQUENCE admin_id_seq CASCADE');
+        $this->addSql('DROP SEQUENCE comment_id_seq CASCADE');
+        $this->addSql('DROP SEQUENCE conference_id_seq CASCADE');
         $this->addSql('ALTER TABLE comment DROP CONSTRAINT FK_9474526C604B8382');
-        $this->addSql('ALTER TABLE comment DROP photo_filename');
-        $this->addSql('CREATE SEQUENCE comment_id_seq');
-        $this->addSql('SELECT setval(\'comment_id_seq\', (SELECT MAX(id) FROM comment))');
-        $this->addSql('ALTER TABLE comment ALTER id SET DEFAULT nextval(\'comment_id_seq\')');
-        $this->addSql('ALTER TABLE comment ALTER created_at SET DEFAULT CURRENT_TIMESTAMP');
-        $this->addSql('ALTER TABLE comment ADD CONSTRAINT comment_conference_id_fkey FOREIGN KEY (conference_id) REFERENCES conference (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('DROP TABLE admin');
+        $this->addSql('DROP TABLE comment');
+        $this->addSql('DROP TABLE conference');
+        $this->addSql('DROP TABLE messenger_messages');
     }
 }
