@@ -54,7 +54,7 @@ class ConferenceController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $comment->setConference($this->conferenceRepository->find($id));
+            $comment->setConference($conference);
             $comment->setCreatedAt(new \DateTime());
             $comment->setEmail($form['email']->getData());
             $comment->setAuthor($form['author']->getData());
@@ -102,7 +102,7 @@ class ConferenceController extends AbstractController
         }
 
         $conference = $this->conferenceRepository->find($id);
-        $comments = $this->commentRepository->findBy(['conference' => $id]);
+        $comments = $this->commentRepository->findPublishedCommentsByConference($id);
 
         if (!$conference) {
             throw $this->createNotFoundException('The conference does not exist');

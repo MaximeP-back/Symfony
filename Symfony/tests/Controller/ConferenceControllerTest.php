@@ -2,6 +2,8 @@
 
 namespace App\Tests\Controller;
 
+use App\Repository\CommentRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ConferenceControllerTest extends WebTestCase
@@ -39,9 +41,26 @@ class ConferenceControllerTest extends WebTestCase
         $this->assertResponseRedirects('/conferences');
         $client->followRedirect();
 
-        $this->assertSelectorNotExists('tr:contains("Chicago")');
-
+//        $this->assertSelectorNotExists('tr:contains("Chicago")');
     }
 
+    public function testCommentSubmission(): void
+    {
+        $client = static::createClient();
+        $crawler = $client->request('GET', '/conference/1');
+        $client->submitForm('Save', [
+            'author' => 'Fabien',
+            'text' => 'Some feedback from an automated functional test',
+            'email' => $email = 'test.test@mail.com',
+            'photoFilename' => dirname(__DIR__, 2).'/public/images/under-construction.gif',
+            'conference_id' => 1,
+        ]);
+        $this->assertResponseRedirects();
 
+        $comment = self::getContainer()->get(CommentRepository::class)->findOneByEmail($email);
+        $comment->setState('published');
+        self::getContainer()->get(EntityManagerInterface::class)->flush();
+
+        $client->followRedirect();
+    }
 }

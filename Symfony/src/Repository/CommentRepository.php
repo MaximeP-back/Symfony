@@ -39,4 +39,26 @@ class CommentRepository extends ServiceEntityRepository
         $entityManager->remove($comment);
         $entityManager->flush();
     }
+
+    public function findPublishedComments(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.state = :state')
+            ->setParameter('state', 'published')
+            ->orderBy('c.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findPublishedCommentsByConference(int $conferenceId): array
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.conference = :conferenceId')
+            ->andWhere('c.state = :state')
+            ->setParameter('conferenceId', $conferenceId)
+            ->setParameter('state', 'published')
+            ->orderBy('c.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }
