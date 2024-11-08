@@ -4,6 +4,8 @@ namespace App\Controller\Comments;
 
 use App\Entity\Comment;
 use App\Form\CommentType;
+use App\Message\CommentMessage;
+use Symfony\Component\Messenger\MessageBusInterface;
 use App\Repository\CommentRepository;
 use App\Repository\ConferenceRepository;
 use App\SpamChecker;
@@ -20,7 +22,7 @@ class CommentController extends AbstractController
 
     private $commentRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, CommentRepository $commentRepository)
+    public function __construct(EntityManagerInterface $entityManager, CommentRepository $commentRepository, private MessageBusInterface $messageBus)
     {
         $this->entityManager = $entityManager;
         $this->commentRepository = $commentRepository;
@@ -92,11 +94,11 @@ class CommentController extends AbstractController
             'referrer'   => $request->headers->get('referer'),
             'permalink'  => $request->getUri(),
         ];
-        if (2 === $spamChecker->getSpamScore($comment, $context)) {
-            throw new \RuntimeException('Blatant spam, go away!');
-        }
 
-        $this->commentRepository->save($comment);
+        $this->entityManager->persist($comment);
+        $this->entityManager->flush();
+
+        $this->messageBus->dispatch(new CommentMessage($comment->getId(), $context));
 
         return $this->json($comment, Response::HTTP_CREATED, [], ['groups' => 'comment:read']);
     }
