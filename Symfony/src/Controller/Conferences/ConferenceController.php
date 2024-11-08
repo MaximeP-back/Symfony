@@ -3,8 +3,6 @@
 namespace App\Controller\Conferences;
 
 use App\Entity\Comment;
-use App\Message\CommentMessage;
-use Symfony\Component\Messenger\MessageBusInterface;
 use App\Entity\Conference;
 use App\Form\CommentType;
 use App\Repository\CommentRepository;
@@ -30,7 +28,7 @@ class ConferenceController extends AbstractController
 
     private $logger;
 
-    public function __construct(EntityManagerInterface $entityManager, ConferenceRepository $conferenceRepository, CommentRepository $commentRepository, string $photoDir, LoggerInterface $logger, private MessageBusInterface $messageBus)
+    public function __construct(EntityManagerInterface $entityManager, ConferenceRepository $conferenceRepository, CommentRepository $commentRepository, string $photoDir, LoggerInterface $logger)
     {
         $this->entityManager = $entityManager;
         $this->conferenceRepository = $conferenceRepository;
@@ -76,10 +74,29 @@ class ConferenceController extends AbstractController
             ];
 
             $this->logger->info('Spam check context', $context);
+
+            $spamScore = $spamChecker->getSpamScore($comment, $context);
+
+            if (0 === $spamScore) {
+                $this->addFlash('success', 'Comment was submitted for moderation');
+                $this->entityManager->persist($comment);
+                $this->entityManager->flush();
+
+                return $this->redirectToRoute('conference_show', ['id' => $id]);
+            }
+            if (1 === $spamScore) {
+                $this->addFlash('success', 'Comment was marked as spam');
+
+                return $this->redirectToRoute('conference_show', ['id' => $id]);
+            }
+            if (2 === $spamScore) {
+                $this->addFlash('error', 'Blatant spam, go away!');
+
+                return $this->redirectToRoute('conference_show', ['id' => $id]);
+            }
+
             $this->entityManager->persist($comment);
             $this->entityManager->flush();
-
-            $this->messageBus->dispatch(new CommentMessage($comment->getId(), $context));
 
             return $this->redirectToRoute('conference_show', ['id' => $id]);
         }
