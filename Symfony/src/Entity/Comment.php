@@ -2,17 +2,22 @@
 
 namespace App\Entity;
 
+use AllowDynamicProperties;
 use App\Repository\CommentRepository;
+use DateTime;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ORM\Entity(repositoryClass: CommentRepository::class)]
+#[AllowDynamicProperties] #[ORM\Entity(repositoryClass: CommentRepository::class)]
 class Comment
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    #[Groups(['comment:read'])]
+    private int $id;
 
     #[ORM\ManyToOne(targetEntity: Conference::class)]
     #[ORM\JoinColumn(nullable: false)]
@@ -20,22 +25,25 @@ class Comment
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
-    private $author;
+    private string $author;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
-    private $text;
+    private string $text;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
     #[Assert\Email]
-    private $email;
+    private string $email;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $photoFilename;
+    private ?string $photoFilename;
 
     #[ORM\Column(type: 'datetime')]
-    private $createdAt;
+    private DateTime $createdAt;
+
+    #[ORM\Column(length: 255, options: ['default' => 'submitted'])]
+    private ?string $state = 'submitted';
 
     public function getId(): ?int
     {
@@ -90,14 +98,14 @@ class Comment
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
     public function setCreatedAt(): self
     {
-        $this->createdAt = new \DateTime();
+        $this->createdAt = new DateTime();
 
         return $this;
     }
@@ -110,6 +118,18 @@ class Comment
     public function setText(string $text): self
     {
         $this->text = $text;
+
+        return $this;
+    }
+
+    public function getState(): ?string
+    {
+        return $this->state;
+    }
+
+    public function setState(string $state): static
+    {
+        $this->state = $state;
 
         return $this;
     }

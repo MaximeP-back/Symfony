@@ -51,34 +51,28 @@ class CommentController extends AbstractController
     #[Route('/comments', name: 'comments')]
     public function index(): Response
     {
-        $comments = $this->commentRepository->findAll();
+        $comments = $this->commentRepository->findPublishedComments();
 
-        return $this->render('Comments/index.html.twig', [
-            'comments'        => $comments,
-            'controller_name' => 'Page des commentaires',
-        ]);
+        return $this->json(['comments' => $comments]);
     }
 
     #[Route('/comments/create', name: 'create_comment', methods: ['POST'])]
     public function create(Request $request, ValidatorInterface $validator, ConferenceRepository $conferenceRepository, SpamChecker $spamChecker): Response
     {
-        $comment = new Comment();
-        $form = $this->createForm(CommentType::class, $comment);
+        $data = json_decode($request->getContent(), true);
 
-        $comment->setAuthor($request->request->get('author'));
-        $comment->setEmail($request->request->get('email'));
-        $comment->setText($request->request->get('text'));
-        $comment->setPhotoFilename($request->request->get('photoFilename'));
+        $comment = new Comment();
+        $comment->setAuthor($data['author'] ?? null);
+        $comment->setEmail($data['email'] ?? null);
+        $comment->setText($data['text'] ?? null);
+        $comment->setPhotoFilename($data['photo_filename'] ?? null);
         $comment->setCreatedAt(new \DateTime());
 
-        $conference = $conferenceRepository->find($request->request->get('conference_id'));
+        $conference = $conferenceRepository->find($data['conference_id'] ?? null);
         if ($conference) {
             $comment->setConference($conference);
         } else {
-            return $this->render('Comments/new.html.twig', [
-                'errors'          => ['conference' => 'Conference not found'],
-                'controller_name' => 'Page de création de Commentaire',
-            ]);
+            return $this->json(['errors' => ['conference' => 'Conference not found']], Response::HTTP_BAD_REQUEST);
         }
 
         $errors = $validator->validate($comment);
@@ -89,10 +83,7 @@ class CommentController extends AbstractController
                 $errorMessages[$error->getPropertyPath()] = $error->getMessage();
             }
 
-            return $this->render('Comments/new.html.twig', [
-                'errors'          => $errorMessages,
-                'controller_name' => 'Page de création de Commentaire',
-            ]);
+            return $this->json(['errors' => $errorMessages], Response::HTTP_BAD_REQUEST);
         }
 
         $context = [
@@ -107,7 +98,7 @@ class CommentController extends AbstractController
 
         $this->commentRepository->save($comment);
 
-        return $this->redirectToRoute('comments');
+        return $this->json($comment, Response::HTTP_CREATED, [], ['groups' => 'comment:read']);
     }
 
     #[Route('/comments/update/{id}', name: 'update_comment', methods: ['POST'])]
